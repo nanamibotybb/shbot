@@ -1,0 +1,13 @@
+#!/bin/sh
+
+
+MAH='curl localhost:8080'
+
+A='resp/newFriendRequestEvent'
+B='resp/botInvitedJoinGroupRequestEvent'
+E=$1
+F=$2
+G=$3
+D="{\"eventId\": $E, \"fromId\": $F, \"groupId\": $G, \"operate\": 0,\"message\": \"Hello!!!\"}"
+
+echo `$MAH/$B -d "$D"`
