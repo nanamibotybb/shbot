@@ -1,0 +1,8 @@
+#!/bin/sh
+
+MAH='curl localhost:8080'
+GRPNO=$1
+TEXT=$2
+D={\"target\":$GRPNO,\"messageChain\":\[{\"type\":\"Plain\",\"text\":\"$TEXT\"}\]}
+
+echo `$MAH/sendGroupMessage -d "$D"`
