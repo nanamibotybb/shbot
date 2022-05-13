@@ -4,12 +4,19 @@
 
 MAH='curl localhost:8080'
 
-MSGCNT=`$MAH/countMessage | jq '.data'`
+MSGCNT=`$MAH/countMessage 2>/dev/null | jq '.data'`
+echo $MSGCNT
 
 if [ $MSGCNT != 0 ]
 then
-    MSG=`$MAH/'fetchMessage?count=1'`
+    MSG=`$MAH/'fetchMessage?count=1' 2>/dev/null`
+
+    if echo $MSG | grep '\"data\":\[\]' > /dev/null
+    then
+        exit
+    fi
+
     LOG=~/log/`~/ts`.json
-    echo $MSG | json_pp > $LOG
+    echo $MSG | json_pp -json_opt utf8,pretty > $LOG
     python3 ~/handler.py < $LOG
 fi
