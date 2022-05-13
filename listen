@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# nc -l 12321
-
-MAH='curl localhost:8080'
-
-$MAH/countMessage | jq '.data' 
+while true
+do
+    ./process
+    sleep 1
+done
