@@ -1,0 +1,13 @@
+#!/bin/sh
+
+GRPNO=$2
+QUERY=`echo "$1" | sed 's/.\+ //' | sed 's/\///g'`
+IMG=/tmp/nanabot.check.png
+C=/tmp/nanabot.check.tmp
+python3 ~/check/check.py "$QUERY" > $C || exit 1
+~/shbot/txt2img $C $IMG || exit 1
+ID=`~/shbot/upload img $IMG | jq -r .imageId`
+rm $IMG $C
+echo $ID > $C
+~/shbot/send $GRPNO "$ID"
+exit 0

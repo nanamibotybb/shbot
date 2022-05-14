@@ -31,17 +31,10 @@ TXT=`echo $MSG | jq -r .text`
 ISADMIN=$([ `cat ~/etc/adminid` -eq $SENDER_ID ] && echo "y")
 
 
-check ()
-{
-    QUERY=`echo "$TXT" | sed 's/.\+ //'`
-    python3 ~/check/check.py "$QUERY" > $C || return 1
-    send_reply
-    return 0
-}
-
 if echo "$TXT" | grep -i "^check"
 then
-    check && exit
+    ~/shbot/check "$TXT" $GRPNO
+    exit
 fi
 
 

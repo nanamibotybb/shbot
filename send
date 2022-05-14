@@ -2,9 +2,16 @@
 
 MAH='curl localhost:8080'
 GRPNO=$1
-TEXT=`echo "$2" | head -c 400` # shorter
 DELAY=~/cache/lastsend
-D={\"target\":$GRPNO,\"messageChain\":\[{\"type\":\"Plain\",\"text\":\"$TEXT\"}\]}
+
+if echo $2 | grep -E '.mirai|png$'
+then
+    D={\"target\":$GRPNO,\"messageChain\":\[{\"type\":\"Image\",\"imageId\":\"$2\",\"path\":null,\"base64\":null}\]}
+    echo $D
+else
+    TEXT=`echo "$2" | head -c 400` # shorter
+    D={\"target\":$GRPNO,\"messageChain\":\[{\"type\":\"Plain\",\"text\":\"$TEXT\"}\]}
+fi
 
 sec ()
 {
@@ -12,11 +19,6 @@ sec ()
 }
 
 ((NEXT=`cat $DELAY`+5))
-
-if [ $NEXT -gt 59 ]
-then
-    NEXT=1
-fi
 
 while true
 do

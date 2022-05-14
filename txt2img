@@ -1,0 +1,13 @@
+#!/bin/sh
+
+TXT=$1
+TMP=~/cache/txt2img.tmp
+IMGOUT=$2
+SIZ=20
+echo text 15, 15 \" > $TMP
+cat $TXT >> $TMP
+echo \" >> $TMP
+((HEIGHT=($SIZ+18)*`cat $TXT | wc -l`))
+((WIDTH=$SIZ*20))
+
+convert -size ${WIDTH}x$HEIGHT xc:black -font 'Noto-Serif-CJK-SC' -pointsize $SIZ -fill white -draw @$TMP $IMGOUT
