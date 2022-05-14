@@ -3,6 +3,25 @@
 MAH='curl localhost:8080'
 GRPNO=$1
 TEXT=$2
+DELAY=~/cache/lastsend
 D={\"target\":$GRPNO,\"messageChain\":\[{\"type\":\"Plain\",\"text\":\"$TEXT\"}\]}
+
+sec ()
+{
+    date +%S
+}
+
+((NEXT=`cat $DELAY`+5))
+
+while true
+do
+    if [ `sec` -gt $NEXT ]
+    then
+        sec > $DELAY
+        break
+    else
+        sleep 2
+    fi
+done
 
 echo `$MAH/sendGroupMessage -d "$D"`
