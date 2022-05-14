@@ -8,7 +8,7 @@ D={\"target\":$GRPNO,\"messageChain\":\[{\"type\":\"Plain\",\"text\":\"$TEXT\"}\
 
 sec ()
 {
-    date +%S
+    date +%s
 }
 
 ((NEXT=`cat $DELAY`+5))
