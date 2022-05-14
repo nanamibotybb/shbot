@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+import json
+import sys
+
+def work(r):
+    try:
+        r = r['data'][0]['messageChain']
+    except:
+        return
+
+    if not r:
+        return
+
+    for i in r:
+        if i['type'] in ['Plain', 'Image']:
+            print(json.dumps(i, indent=4, ensure_ascii=False))
+            break
+
+
+r = json.load(sys.stdin)
+work(r)
+

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+TYPE=`jq -r .data[0].type $1`
+
+if [ $TYPE != GroupMessage ]
+then
+    exit
+fi
+
+GRPNO=`jq -r .data[0].sender.group.id $1`
+MSG=`~/shbot/getmsg < $1`
+MTYPE=`echo $MSG | jq -r .type`
+
+if [ $MTYPE == Image ]
+then
+    IID=`echo $MSG | jq -r .imageId`
+    ~/imghandler $IID $GRPNO 
+    exit
+fi
+
+MN=`jq -r .data[0].sender.memberName $1`
+TXT=`echo $MSG | jq -r .text`
+
+python3 ~/handler.py $GRPNO "$TXT" "$MN"

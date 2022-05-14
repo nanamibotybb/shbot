@@ -4,7 +4,7 @@ i=$1
 
 if grep GroupMessage $i > /dev/null
 then
-    grpno=$(cat $i | json_pp | grep \"group\" -A 1 | grep id | sed 's/[^0-9]//g')
+    grpno=`jq .data[0].sender.group.id $i`
     echo $grpno
     out=groupmsg/$grpno
     mkdir -p $out
@@ -12,4 +12,5 @@ then
 else
     mv $i other
 fi
+
 

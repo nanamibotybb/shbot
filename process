@@ -18,5 +18,5 @@ then
 
     LOG=~/log/`~/ts`.json
     echo $MSG | json_pp -json_opt utf8,pretty > $LOG
-    python3 ~/handler.py < $LOG
+    ~/shbot/handler $LOG
 fi

@@ -8,7 +8,7 @@ then
         exit
 fi
 
-event=$(cat $i | jq .data[0].type | sed 's/\"//g') 
+event=`jq -r .data[0].type $i`
 mkdir -p $event
 echo $i $event
 mv $i $event
