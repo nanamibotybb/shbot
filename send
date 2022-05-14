@@ -2,7 +2,7 @@
 
 MAH='curl localhost:8080'
 GRPNO=$1
-TEXT=$2
+TEXT=`echo "$2" | head -c 400` # shorter
 DELAY=~/cache/lastsend
 D={\"target\":$GRPNO,\"messageChain\":\[{\"type\":\"Plain\",\"text\":\"$TEXT\"}\]}
 
@@ -13,6 +13,11 @@ sec ()
 
 ((NEXT=`cat $DELAY`+5))
 
+if [ $NEXT -gt 59 ]
+then
+    NEXT=1
+fi
+
 while true
 do
     if [ `sec` -gt $NEXT ]
@@ -20,6 +25,7 @@ do
         sec > $DELAY
         break
     else
+        echo sleeping to $NEXT "(`sec`)"
         sleep 2
     fi
 done
