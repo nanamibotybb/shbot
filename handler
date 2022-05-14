@@ -8,17 +8,19 @@ then
 fi
 
 GRPNO=`jq -r .data[0].sender.group.id $1`
-MSG=`~/shbot/getmsg < $1`
+MSG=`~/shbot/getmsg < $1` # e.g. {type: ..., text: ...}
 MTYPE=`echo $MSG | jq -r .type`
 
 if [ $MTYPE == Image ]
 then
     IID=`echo $MSG | jq -r .imageId`
-    ~/imghandler $IID $GRPNO 
-    exit
+    C=~/cache/handler.cache
+    ~/bin/imghandler $IID > $C && ~/shbot/send $GRPNO "`cat $C`"
 fi
 
 MN=`jq -r .data[0].sender.memberName $1`
+SENDER_ID=`jq -r .data[0].sender.id $1`
 TXT=`echo $MSG | jq -r .text`
+ISADMIN=$([ `cat ~/adminid` -eq $SENDER_ID ] && echo "y")
 
-python3 ~/handler.py $GRPNO "$TXT" "$MN"
+~/workernana $GRPNO "$TXT" "$ISADMIN" || python3 ~/handler.py $GRPNO "$TXT" "$MN"
