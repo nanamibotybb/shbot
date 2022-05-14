@@ -8,6 +8,5 @@ python3 ~/check/check.py "$QUERY" > $C || exit 1
 ~/shbot/txt2img $C $IMG || exit 1
 ID=`~/shbot/upload img $IMG | jq -r .imageId`
 rm $IMG $C
-echo $ID > $C
 ~/shbot/send $GRPNO "$ID"
 exit 0
