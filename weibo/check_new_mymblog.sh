@@ -5,7 +5,7 @@ NEW=~/cache/weibomsg.tmp
 OLD=~/cache/weibomsg
 
 # extracting message into $NEW
-if python3 we.py < $JSON > $NEW
+if python3 ~/shbot/weibo/we.py < $JSON > $NEW
 then
     touch $OLD # create if not exists
 
