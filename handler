@@ -1,26 +1,56 @@
 #!/bin/sh
 
+C=~/cache/handler.cache
 TYPE=`jq -r .data[0].type $1`
 
-if [ $TYPE != GroupMessage ]
-then
-    exit
-fi
+[ $TYPE != GroupMessage ] && exit
 
 GRPNO=`jq -r .data[0].sender.group.id $1`
 MSG=`~/shbot/getmsg < $1` # e.g. {type: ..., text: ...}
 MTYPE=`echo $MSG | jq -r .type`
 
+send_reply ()
+{
+    ~/shbot/send $GRPNO "`cat $C`"
+}
+
 if [ $MTYPE == Image ]
 then
     IID=`echo $MSG | jq -r .imageId`
-    C=~/cache/handler.cache
-    ~/bin/imghandler $IID > $C && ~/shbot/send $GRPNO "`cat $C`"
+    ~/bin/imghandler $IID > $C && send_reply
+    exit
 fi
+
+
+[ $MTYPE != Plain ] && exit
+
 
 MN=`jq -r .data[0].sender.memberName $1`
 SENDER_ID=`jq -r .data[0].sender.id $1`
 TXT=`echo $MSG | jq -r .text`
-ISADMIN=$([ `cat ~/adminid` -eq $SENDER_ID ] && echo "y")
+ISADMIN=$([ `cat ~/etc/adminid` -eq $SENDER_ID ] && echo "y")
 
-~/workernana $GRPNO "$TXT" "$ISADMIN" || python3 ~/handler.py $GRPNO "$TXT" "$MN"
+
+check ()
+{
+    QUERY=`echo "$TXT" | sed 's/.\+ //'`
+    python3 ~/check/check.py "$QUERY" > $C || return 1
+    send_reply
+    return 0
+}
+
+if echo "$TXT" | grep -i "^check"
+then
+    check && exit
+fi
+
+
+replyworker ()
+{
+    ~/bin/replyworker "$TXT" "$ISADMIN" > $C || return 1
+    send_reply
+    return 0
+}
+
+replyworker || python3 ~/handler.py $GRPNO "$TXT" "$MN"
+
