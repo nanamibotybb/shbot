@@ -1,4 +1,5 @@
 #!/bin/sh
+# get called every second by #listen
 
 # nc -l 12321
 
@@ -18,4 +19,15 @@ then
     LOG=~/log/`~/ts`.json
     echo $MSG | json_pp -json_opt utf8,pretty > $LOG
     ~/shbot/handler $LOG
+fi
+
+
+# weibo
+WEIBO=~/cache/lastweibo
+((NEXT=`cat $WEIBO`+60))
+NOW=`date +%s`
+if [ $NOW -gt $NEXT ]
+then
+    echo $NOW > $WEIBO
+    ~/shbot/weibo/weibo.sh
 fi
