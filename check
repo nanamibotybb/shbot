@@ -5,7 +5,7 @@ QUERY=`echo "$1" | sed 's/.\+ //' | sed 's/\///g' | sed 's/[\n\t\r :\/\\]//g'`
 IMG=/tmp/nanabot.check.png
 C=/tmp/nanabot.check.tmp
 CACHE_DIR=~/cache/check.json.cache/$QUERY
-mkdir -p CACHE_DIR
+mkdir -p $CACHE_DIR
 CACHE_FILE=$CACHE_DIR/`~/ts`
 python3 ~/check/check.py "$QUERY" "$CACHE_FILE" > $C || exit 1
 ~/shbot/txt2img $C $IMG || exit 1
