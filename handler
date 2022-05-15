@@ -29,7 +29,7 @@ MN=`jq -r .data[0].sender.memberName $1`
 SENDER_ID=`jq -r .data[0].sender.id $1`
 TXT=`echo $MSG | jq -r .text`
 ISADMIN=$([ `cat ~/etc/adminid` -eq $SENDER_ID ] && echo "y")
-
+ARG=`echo "$TXT" | sed -e 's/.\+ //' -e 's/\///g' -e 's/[\n\t\r :\/\\]//g'`
 
 if echo "$TXT" | grep -i "^check"
 then
@@ -37,6 +37,11 @@ then
     exit
 fi
 
+if echo "$TXT" | grep -i "^bgraph"
+then
+    ~/shbot/bgraph $GRPNO $ARG
+    exit
+fi
 
 replyworker ()
 {

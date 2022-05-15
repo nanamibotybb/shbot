@@ -1,0 +1,12 @@
+#!/bin/sh
+
+GRPNO=$1
+N=$2
+TMP=/tmp/nanabot.bgraph.tmp
+
+~/bgraph/dump $N > $TMP || exit 1
+timeout 20 dot -Tpng -O $TMP || exit 1
+ID=`~/shbot/upload img $TMP.png | jq -r .imageId`
+rm $TMP $TMP.png
+~/shbot/send $GRPNO "$ID"
+exit 0
