@@ -1,10 +1,17 @@
 #!/bin/sh
 
 GRPNO=$2
-QUERY=`echo "$1" | sed 's/.\+ //' | sed 's/\///g'`
+QUERY=`echo "$1" | sed 's/.\+ //' | sed 's/\///g' | sed 's/[ \r\t\n:/\\]//g'`
 IMG=/tmp/nanabot.check.png
 C=/tmp/nanabot.check.tmp
-python3 ~/check/check.py "$QUERY" > $C || exit 1
+
+# cache
+CACHE_DIR=~/cache/check.json.cache/$QUERY
+mkdir -p $CACHE_DIR
+CACHE_FILE=$CACHE_DIR/`~/ts`
+# end cache
+
+python3 ~/check/check.py "$QUERY" "$CACHE_FILE" > $C || exit 1
 ~/shbot/txt2img $C $IMG || exit 1
 ID=`~/shbot/upload img $IMG | jq -r .imageId`
 rm $IMG $C
