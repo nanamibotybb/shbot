@@ -1,0 +1,13 @@
+#!/bin/sh
+
+GRPNO=$1
+ARG=$2
+TMP=/tmp/nanabot.uidnames.tmp
+
+cd ~/rel
+timeout 10 ./uidnames $ARG > $TMP || exit 1
+RES=`cat $TMP`
+rm $TMP
+[ "$RES" = '' ] && exit 1
+
+~/shbot/send $GRPNO "$RES"
