@@ -1,0 +1,13 @@
+#!/bin/sh
+
+GRPNO=$1
+ARG=$2
+TMP=/tmp/nanabot.tmp.rel
+
+cd ~/rel
+timeout 20 ./rel $ARG > $TMP || exit 1
+timeout 20 dot -Tpng -O $TMP || exit 1
+ID=`~/shbot/upload img $TMP.png | jq -r .imageId`
+rm $TMP*
+~/shbot/send $GRPNO "$ID"
+exit 0
