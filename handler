@@ -43,6 +43,12 @@ then
     exit
 fi
 
+if echo "$TXT" | grep -i "^rel"
+then
+    ~/shbot/rel $GRPNO $ARG
+    exit
+fi
+
 replyworker ()
 {
     ~/bin/replyworker "$TXT" "$ISADMIN" > $C || return 1
