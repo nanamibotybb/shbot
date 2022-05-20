@@ -37,17 +37,19 @@ then
     exit
 fi
 
-if echo "$TXT" | grep -i "^bgraph"
-then
-    ~/shbot/bgraph $GRPNO $ARG
-    exit
-fi
+mycmd ()
+{
+    CMD=$1
+    if echo "$TXT" | grep -i "^$CMD"
+    then
+        ~/shbot/$CMD $GRPNO $ARG
+        exit
+    fi
+}
 
-if echo "$TXT" | grep -i "^rel"
-then
-    ~/shbot/rel $GRPNO $ARG
-    exit
-fi
+# mycmd bgraph
+# mycmd rel
+# mycmd uidname
 
 replyworker ()
 {
@@ -56,5 +58,14 @@ replyworker ()
     return 0
 }
 
-replyworker || python3 ~/handler.py $GRPNO "$TXT" "$MN"
+rd ()
+{
+    RESP=`~/bin/rd "$TXT"`
+    [ "$RESP" = '' ] && return 1
+    echo "$RESP" > $C
+    send_reply
+    return 0
+}
+
+replyworker || rd || python3 ~/handler.py $GRPNO "$TXT" "$MN"
 
