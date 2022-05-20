@@ -67,5 +67,14 @@ rd ()
     return 0
 }
 
-replyworker || rd || python3 ~/handler.py $GRPNO "$TXT" "$MN"
+unoccupied ()
+{
+    RESP=`~/bin/calc_unoccupied "$SENDER_ID" "$TXT"`
+    [ "$RESP" = '' ] && return 1
+    echo "$RESP" > $C
+    send_reply
+    return 0
+}
+
+replyworker || rd || unoccupied || python3 ~/handler.py $GRPNO "$TXT" "$MN"
 
