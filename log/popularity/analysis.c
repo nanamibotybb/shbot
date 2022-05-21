@@ -1,5 +1,6 @@
 #!/usr/local/bin/tcc -run
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 /* time group sender */
@@ -11,6 +12,7 @@ int main(void)
         char ptime[128];
 
         f = fopen("stat.sorted", "r");
+        setenv("TZ", "Asia/Hong_Kong", 1);
         while (3 == fscanf(f, "%s%s%s",
                                 time, group, sender))
         {
@@ -20,8 +22,7 @@ int main(void)
                                 "%c %Z", &tm);
 
                 printf("%s %s %s\n", ptime,
-                        group,
-                                sender);
+                        group, sender);
         }
 
         fclose(f);
