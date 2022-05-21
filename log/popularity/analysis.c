@@ -1,5 +1,6 @@
 #!/usr/local/bin/tcc -run
 #include <stdio.h>
+#include <time.h>
 
 /* time group sender */
 
@@ -7,12 +8,19 @@ int main(void)
 {
         FILE *f;
         char time[128], group[128], sender[128];
+        char ptime[128];
 
-        f = fopen("stat", "r");
+        f = fopen("stat.sorted", "r");
         while (3 == fscanf(f, "%s%s%s",
                                 time, group, sender))
         {
-                printf("%s %s %s\n", time, group,
+                struct tm tm;
+                strptime(time, "%s", &tm);
+                strftime(ptime, sizeof ptime,
+                                "%c %Z", &tm);
+
+                printf("%s %s %s\n", ptime,
+                        group,
                                 sender);
         }
 
