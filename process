@@ -1,10 +1,7 @@
 #!/bin/sh
 # get called every second by #listen
 
-# nc -l 12321
-
 MAH='curl localhost:8080'
-
 MSGCNT=`$MAH/countMessage 2>/dev/null | jq '.data'`
 
 if [ $MSGCNT -ne 0 ]
@@ -12,7 +9,7 @@ then
     MSG=`$MAH/'fetchMessage?count=1' 2>/dev/null`
 
     if echo $MSG | grep '\"data\":\[\]' > /dev/null
-    then
+    then # empty msg
         exit
     fi
 
